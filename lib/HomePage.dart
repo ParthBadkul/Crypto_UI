@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:slide_to_act/slide_to_act.dart';
 import 'models/Post.dart';
 import 'dart:convert';
 
@@ -16,7 +17,8 @@ String stringResponse = "";
 Map mapRespone = {};
 Map data = {};
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late TabController _tabController;
   @override
   Future apicall() async {
     http.Response response;
@@ -37,7 +39,10 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     apicall();
+    _tabController = TabController(length: 2, vsync: this);
   }
+
+  double _currentSliderValue = 20;
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -281,6 +286,191 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Container(
+              height: 20,
+              alignment: Alignment.topCenter,
+              // color: Colors.amber,
+              child: TabBar(
+                controller: _tabController,
+                indicatorSize: TabBarIndicatorSize.label,
+                tabs: [
+                  Text('SLIPPAGE'),
+                  Text('Details'),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              // color: Colors.amber,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              height: 180,
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      side:
+                          BorderSide(color: Color.fromARGB(18, 255, 255, 255)),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Color.fromARGB(140, 38, 44, 47),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      child: Slider(
+                        activeColor: Colors.blueAccent,
+                        inactiveColor: Colors.blueGrey[100],
+                        value: _currentSliderValue,
+                        max: 100,
+                        divisions: 100,
+                        thumbColor: Colors.blueGrey,
+                        label: _currentSliderValue.round().toString(),
+                        onChanged: (value) {
+                          setState(() {
+                            _currentSliderValue = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      side:
+                          BorderSide(color: Color.fromARGB(18, 255, 255, 255)),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Color.fromARGB(140, 38, 44, 47),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  'Rate',
+                                  style: TextStyle(
+                                    color: Colors.white30,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  '1 AVAX = 1.16 0KB',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  'Slippage tolerance',
+                                  style: TextStyle(
+                                    color: Colors.white30,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  '1,29%',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  'Estimated Fees ',
+                                  style: TextStyle(
+                                    color: Colors.white30,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  '0.076 ETH',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              height: 70,
+              // color: Colors.white,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white54),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(40),
+                  ),
+                ),
+                child: SlideAction(
+                  onSubmit: () {
+                    // do something
+                  },
+                  // elevation: 10,
+                  outerColor: Color.fromARGB(255, 38, 44, 47),
+                  innerColor: Colors.blueAccent,
+                  sliderButtonIconSize: 15,
+                  height: 70,
+                  sliderRotate: false,
+                  // sliderButtonIconPadding: 16,
+                  text: "Slide to Pay",
+                  textStyle: TextStyle(
+                    color: Colors.white38,
+                    fontSize: 18,
+                    letterSpacing: 1.5,
+                  ),
+                  // borderRadius: 30,
+                  sliderButtonYOffset: -5,
+                  sliderButtonIcon: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Colors.white60,
+                  ),
+                ),
+              ),
+            ),
+            Spacer(),
           ],
         ),
       ),
